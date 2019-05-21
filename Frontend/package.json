@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "npm-run-all --parallel scssWatch gulpWatch",
-    "build": "npm run scss && npm run gulp",
+    "build": "npm run scss && npm run gulp && build.sh",
     
 	"scssWatch": "node-sass --include-path ./css ./css/style.scss ./css/style.min.css --output-style compressed && node-sass -w ./css/style.scss ./css/style.min.css --output-style compressed",
     "scss": "node-sass --include-path ./css ./css/style.scss ./css/style.min.css --output-style compressed",
