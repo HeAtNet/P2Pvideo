@@ -20,3 +20,4 @@ cp index.html dist/index.html
 cp assets/images/logo-144.png dist/assets/images/logo-144.png
 cp assets/images/logo-192.png dist/assets/images/logo-192.png
 cp assets/images/logo-512.png dist/assets/images/logo-512.png
+cp assets/images/logo-150x50.png dist/assets/images/logo-150x50.png

@@ -13,6 +13,10 @@ const CACHE_ITEMS = [
   '/assets/images/logo-144.png',
   '/assets/images/logo-192.png',
   '/assets/images/logo-512.png',
+  '/assets/images/logo-150x50.png',
+
+  '/fonts/materialicons.css',
+  '/fonts/materialicons.woff2',
 ];
 
 self.addEventListener('install', event => {

@@ -13,12 +13,12 @@
   </head>
   <body>
 
-    <div class="window">
+    <div style="display: none;" class="window">
       <div class="header">
         <img src="/assets/images/logo-150x50.png">
       </div>
       <div class="grow">
-        <div id="tab-window-contacts" class="tabs-window">
+        <div id="window-tabs" class="tabs-window">
           CONTACTS
           <ul class="collection with-header wide">
             <li class="collection-item"><div>Codeword 1<a href="#!" class="secondary-content"><i class="material-icons">clear</i></a></div></li>
@@ -48,6 +48,45 @@
         <li class="tab"><a href="#tab-window-contacts">CONTACTS</a></li>
         <li class="tab"><a class="active" href="#tab-window-call">CALL</a></li>
         <li class="tab"><a href="#tab-window-help">HELP</a></li>
+      </ul>
+    </div>
+
+    <div class="window">
+      <div class="grow">
+        <div id="tab-window-webcam" class="tabs-window">
+          <div class="btn-video-container down">
+            <a class="js-btn-end btn-floating btn-large waves-effect waves-light red"><i class="material-icons">call_end</i></a>
+            <a class="js-btn-cam btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">videocam_off</i></a>
+            <a class="js-btn-mic btn-floating btn-large waves-effect waves-light cyan"><i class="material-icons">mic_off</i></a>
+            <a class="js-btn-cht btn-floating btn-large waves-effect waves-light green"><i class="material-icons">chat</i></a>
+          </div>
+          <video autoplay id="video-other"></video>
+          <video autoplay id="video-own"></video>
+        </div>
+        <div id="tab-window-chat" class="tabs-window">
+          <div class="btn-video-container">
+            <a class="js-btn-end btn-floating btn-large waves-effect waves-light red"><i class="material-icons">call_end</i></a>
+            <a class="js-btn-cam btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">videocam_off</i></a>
+            <a class="js-btn-mic btn-floating btn-large waves-effect waves-light cyan"><i class="material-icons">mic_off</i></a>
+            <a class="js-btn-vid btn-floating btn-large waves-effect waves-light green"><i class="material-icons">face</i></a>
+          </div>
+          <div class="chat-container wide">
+            <div class="left card-panel white">
+              I am a very simple card. I am good at containing small bits of information.I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+            </div>
+            <div class="right card-panel blue-grey lighten-5">
+              I am a very simple card. I am good at containing small bits of information.I am convenient because I require little markup to use effectively. I am similar to what is called a panel in other frameworks.
+            </div>
+          </div>
+          <div class="input-group">
+            <textarea class="materialize-textarea" placeholder="Phone"></textarea>
+            <a class="waves-effect waves-light btn"><i class="material-icons">send</i></a>
+          </div>
+        </div>
+      </div>
+      <ul id="tabs-swipe-demo" class="tabs" style="display: none;">
+        <li class="tab col s3"><a href="#tab-window-webcam">Webcam</a></li>
+        <li class="tab col s3"><a class="active" href="#tab-window-chat">Chat</a></li>
       </ul>
     </div>
 
