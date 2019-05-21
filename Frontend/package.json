@@ -4,18 +4,19 @@
   "description": "",
   "scripts": {
     "start": "npm-run-all --parallel scssWatch gulpWatch",
-    "build": "npm run scss && npm run gulp && build.sh",
-    
-	"scssWatch": "node-sass --include-path ./css ./css/style.scss ./css/style.min.css --output-style compressed && node-sass -w ./css/style.scss ./css/style.min.css --output-style compressed",
+    "build": "npm run lint && npm run scss && npm run gulp && build.sh",
+    "lint": "eslint js/script.js",
+    "scssWatch": "node-sass --include-path ./css ./css/style.scss ./css/style.min.css --output-style compressed && node-sass -w ./css/style.scss ./css/style.min.css --output-style compressed",
     "scss": "node-sass --include-path ./css ./css/style.scss ./css/style.min.css --output-style compressed",
-	"gulpWatch": "npx gulp watch",
-	"gulp": "npx gulp"
+    "gulpWatch": "npx gulp watch",
+    "gulp": "npx gulp"
   },
   "author": "Attila Herczog",
   "dependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
+    "eslint": "^5.16.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
