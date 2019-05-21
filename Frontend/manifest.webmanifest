@@ -1,0 +1,21 @@
+{
+  "name": "P2Pvideo",
+  "version": "1.0",
+  "manifest_version": "1.0",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/assets/images/logo-144.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/assets/images/logo-192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/assets/images/logo-512.png",
+      "sizes": "512x512"
+    }
+  ]
+}
