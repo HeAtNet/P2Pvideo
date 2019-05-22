@@ -8,6 +8,8 @@
     },
     "extends": "eslint:recommended",
     "globals": {
+        "Peer": "readonly",
+        "P2P": "readonly",
         "M": "readonly"
     },
     "parserOptions": {

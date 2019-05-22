@@ -84,7 +84,7 @@ makeCall = (cw) => {
   $('#window-wait').removeClass('hiddenwindow');
 
   console.log('Call ', cw);
-  setTimeout(callReceived, 2000); // temp
+  P2P.startCall(cw);
 };
 endCall = () => {
   $('.window').addClass('hiddenwindow');
@@ -106,6 +106,7 @@ redrawOptionButtons = () => {
 };
 switchCamStatus = () => {
   optionCamStatus = !optionCamStatus;
+  P2P.setCamStatus(optionCamStatus);
   redrawOptionButtons();
 };
 switchMicStatus = () => {
@@ -115,6 +116,7 @@ switchMicStatus = () => {
 
 // INIT
 $( document ).ready(() => {
+  console.log('Document ready');
   // INIT MATERIALIZE
   $('.tabs').tabs({
     swipeable: true,
@@ -169,11 +171,7 @@ $( document ).ready(() => {
     M.Tabs.getInstance($('#tabs-swipe-call')[0]).select('tab-window-webcam');
   });
 
-  navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then((stream) => {
-      document.getElementById('video-other').srcObject = stream;
-      document.getElementById('video-own').srcObject = stream;
-    });
+  P2P.init(callReceived);
 });
 
 // SERVICE WORKER

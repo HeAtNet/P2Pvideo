@@ -4,6 +4,7 @@ const CACHE_ITEMS = [
   '/css/style.min.css',
   '/js/jquery-3.4.1.min.js',
   '/js/materialize.min.js',
+  'js/peerjs.min.js',
   '/js/scripts.min.js',
 
   '/service-worker.js',

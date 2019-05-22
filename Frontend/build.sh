@@ -12,6 +12,7 @@ cp css/style.min.css dist/css/style.min.css
 cp js/jquery-3.4.1.min.js dist/js/jquery-3.4.1.min.js
 cp js/materialize.min.js dist/js/materialize.min.js
 cp js/scripts.min.js dist/js/scripts.min.js
+cp js/peerjs.min.js dist/js/peerjs.min.js
 
 cp service-worker.js dist/service-worker.js
 cp manifest.webmanifest dist/manifest.webmanifest
