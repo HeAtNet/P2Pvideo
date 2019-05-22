@@ -8,6 +8,7 @@ let deleteContact = null;
 let makeCall = null;
 let endCall = null;
 let callReceived = null;
+let callEnded = null;
 
 let redrawOptionButtons = null;
 let switchCamStatus = null;
@@ -87,12 +88,15 @@ makeCall = (cw) => {
   P2P.startCall(cw);
 };
 endCall = () => {
-  $('.window').addClass('hiddenwindow');
-  $('#window-base').removeClass('hiddenwindow');
+  P2P.close();
 };
 callReceived = () => {
   $('.window').addClass('hiddenwindow');
   $('#window-call').removeClass('hiddenwindow');
+};
+callEnded = () => {
+  $('.window').addClass('hiddenwindow');
+  $('#window-base').removeClass('hiddenwindow');
 };
 
 let optionCamStatus = true;
@@ -111,6 +115,7 @@ switchCamStatus = () => {
 };
 switchMicStatus = () => {
   optionMicStatus = !optionMicStatus;
+  P2P.setMicStatus(optionMicStatus);
   redrawOptionButtons();
 };
 
@@ -171,9 +176,15 @@ $( document ).ready(() => {
     M.Tabs.getInstance($('#tabs-swipe-call')[0]).select('tab-window-webcam');
   });
 
-  P2P.init(callReceived);
+  P2P.init(callReceived, callEnded);
+
+  const path = window.location.pathname.substr(1).split('/');
+  if (path[0] === 'c') {
+    makeCall(path[1]);
+  }
 });
 
+/*
 // SERVICE WORKER
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -188,6 +199,7 @@ if ('serviceWorker' in navigator) {
 } else {
   console.error('Service workers not supported');
 }
+*/
 
 /*
 let deferredPrompt;
