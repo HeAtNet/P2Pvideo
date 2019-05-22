@@ -148,6 +148,26 @@ body {
     margin-top: 10px;
   }
   .card-panel {
+    clear: both;
+    padding: 0;
+
+    p {
+      padding: 10px;
+      border: solid #bbb;
+      border-width: 1px 0 0 0;
+
+      &:first-of-type {
+        border-width: 0;
+      }
+      &.nopadding {
+        padding: 0;
+        display: flex;
+
+        iframe {
+          width: 100%;
+        }
+      }
+    }
     &.left {
       margin-right: 10%;
       margin-left: 5px;

@@ -9,6 +9,41 @@ let optionCamStatus = false;
 let optionMicStatus = false;
 const P2P = {};
 
+const addMessage = (message, own) => {
+  message = message.replace(/</g, '&lt;');
+  message = message.replace(/>/g, '&gt;');
+  message = message.replace(/\n---\n/g, '\n<hr>');
+  message = message.replace(/\*(.+?)\*/g, '<b>$1</b>');
+  message = message.replace(/_(.+?)_/g, '<i>$1</i>');
+  message = message.replace(/~(.+?)~/g, '<s>$1</s>');
+  message = message.replace(/```\n([\w\W]+?)\n```/g, '<pre>$1</pre>');
+  message = message.replace(/`(.+?)`/g, '<span class="code">$1</span>');
+  message = message.replace(/ /g, '&nbsp;');
+  message = message.replace(/\n/g, '<br>');
+
+  const links = message.match(/((?:http|ftp|https):\/\/(?:[\w+?\.\w+])+(?:[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*))/g); // eslint-disable-line
+  message = message.replace(/((?:http|ftp|https):\/\/(?:[\w+?\.\w+])+(?:[a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*))/g, '<a href="$1" target="_blank">$1</a>'); // eslint-disable-line
+
+  const msgClass = own ? 'right blue-grey lighten-5' : 'left white';
+  const msgElement = $('<div class="card-panel ' + msgClass + '">');
+  msgElement.html($('<p>').html(message));
+
+  if (links) {
+    links.forEach(link => {
+      const p = $('<p>');
+      const youtube = link.match(/^(?:http:|https:)?\/\/(?:www\.)?youtu(?:be)?(?:-nocookie)?\.(?:(?:(?:com).*?(?:v=|v\/|a=|embed\/|vi=|vi\/|e\/))|(?:be\/)|(?:com\/user\/.+\/))([^?&/#\n]+).*$/);
+      if (youtube && youtube[1]) {
+        p.addClass('nopadding');
+        p.html(`<iframe src="https://www.youtube.com/embed/${youtube[1]}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`);
+      } else {
+        p.html(`<a href="${link}" target="_blank">${link}</a>`);
+      }
+      msgElement.append(p);
+    });
+  }
+  $('#message-box').append(msgElement);
+};
+
 P2P.init = (callReceivedCallback, callEndedCallback) => {
   globalCallReceivedCallback = callReceivedCallback;
   globalCallEndedCallback = callEndedCallback;
@@ -68,6 +103,8 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
     conn.on('data', data => {
       if (data === 'sclose') {
         P2P.close();
+      } else if (data.substr(0, 1) === 'u') {
+        addMessage(data.substr(1), false);
       } else {
         console.log('Data recieved', data);
       }
@@ -132,6 +169,8 @@ P2P.startCall = (id) => {
       });
     } else if (data === 'sclose') {
       P2P.close();
+    } else if (data.substr(0, 1) === 'u') {
+      addMessage(data.substr(1), false);
     } else {
       console.log(data);
     }
@@ -154,6 +193,13 @@ P2P.setMicStatus = status => {
   optionMicStatus = status;
   if (ownStream && ownStream.getAudioTracks && ownStream.getAudioTracks().length) {
     ownStream.getAudioTracks()[0].enabled = status;
+  }
+};
+
+P2P.message = message => {
+  if (conn && message !== '') {
+    conn.send('u' + message);
+    addMessage(message, true);
   }
 };
 

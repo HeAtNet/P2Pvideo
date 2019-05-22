@@ -175,6 +175,28 @@ $( document ).ready(() => {
   $('.js-btn-vid').click(() => {
     M.Tabs.getInstance($('#tabs-swipe-call')[0]).select('tab-window-webcam');
   });
+  $('#btn-message-send').click(() => {
+    P2P.message($('#message-input').val());
+    $('#message-input').val('');
+    M.textareaAutoResize($('#message-input'));
+  });
+  $('#message-input').on('keydown', e => {
+    switch (e.keyCode) {
+    case 13: // enter
+      if (!e.shiftKey) {
+        P2P.message(e.target.value);
+        e.target.value = '';
+        M.textareaAutoResize($('#message-input'));
+        e.preventDefault();
+        return false;
+      }
+      break;
+    case 27: // esc
+      e.target.value = '';
+      break;
+    }
+    return true;
+  });
 
   P2P.init(callReceived, callEnded);
 
@@ -184,7 +206,6 @@ $( document ).ready(() => {
   }
 });
 
-/*
 // SERVICE WORKER
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -199,7 +220,6 @@ if ('serviceWorker' in navigator) {
 } else {
   console.error('Service workers not supported');
 }
-*/
 
 /*
 let deferredPrompt;
