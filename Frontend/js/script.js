@@ -201,9 +201,52 @@ $( document ).ready(() => {
   P2P.init(callReceived, callEnded);
 
   const path = window.location.pathname.substr(1).split('/');
-  if (path[0] === 'c') {
-    makeCall(path[1]);
-  }
+
+  let checkTimeout = null;
+  let hasCamPermission = false;
+  let hasMicPermission = false;
+  new Promise( (resolve, reject) => {
+    if ('mediaDevices' in navigator) {
+      return resolve();
+    }
+    return reject();
+  }).catch(() => {
+    console.error('mediaDevices not supported');
+  }).then(() => {
+    checkTimeout = setTimeout(() => {
+      $('.overlay').fadeIn();
+    }, 2000);
+    return navigator.mediaDevices.getUserMedia({video: true});
+  }).then(stream => {
+    clearTimeout(checkTimeout);
+    $('.overlay').fadeOut();
+    stream.getVideoTracks()[0].stop();
+    hasCamPermission = true;
+  }, () => {
+    clearTimeout(checkTimeout);
+    $('.overlay').fadeOut();
+    console.error('Webcam not enabled');
+  }).then(() => {
+    checkTimeout = setTimeout(() => {
+      $('.overlay').fadeIn();
+    }, 2000);
+    return navigator.mediaDevices.getUserMedia({audio: true});
+  }).then(stream => {
+    clearTimeout(checkTimeout);
+    $('.overlay').fadeOut();
+    stream.getAudioTracks()[0].stop();
+    hasMicPermission = true;
+  }, () => {
+    clearTimeout(checkTimeout);
+    $('.overlay').fadeOut();
+    console.error('Microphone not enabled');
+  }).then(() => {
+    if (!hasCamPermission || !hasMicPermission) {
+      $('.overlay').fadeIn();
+    } else if (path[0] === 'c') {
+      makeCall(path[1]);
+    }
+  });
 });
 
 // SERVICE WORKER
