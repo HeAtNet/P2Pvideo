@@ -43,6 +43,29 @@ const addMessage = (message, own) => {
   }
   $('#message-box').append(msgElement);
 };
+const startVideo = (id, iteration) => {
+  console.log('Try to start video stream', id, iteration);
+  if (vconn) {
+    vconn.close();
+  }
+  vconn = peer.call(id, ownStream);
+  if (vconn) {
+    console.log('J:startstream');
+    vconn.on('stream', remoteStream => {
+      // Show stream in some video/canvas element.
+      console.log('J:remotestream');
+      document.getElementById('video-other').srcObject = remoteStream;
+    });
+    vconn.on('error', () => {
+      console.error('video error');
+    });
+  } else if (iteration && iteration > 0) {
+    setTimeout(() => {
+      startVideo(id, iteration - 1);
+    }, 500);
+  }
+
+};
 
 P2P.init = (callReceivedCallback, callEndedCallback) => {
   $('#codeword-input').val('asdf');
@@ -94,14 +117,15 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
         ownStream.getVideoTracks()[0].enabled = optionCamStatus;
         ownStream.getAudioTracks()[0].enabled = optionMicStatus;
         document.getElementById('video-own').srcObject = ownStream;
-        conn.send('svideoStream');
       })
       .catch((error) => {
         console.error(error);
       });
 
     conn.on('data', data => {
-      if (data === 'sclose') {
+      if (data === 'svideoStream') {
+        conn.send('svideoStream');
+      } else if (data === 'sclose') {
         P2P.close();
       } else if (data.substr(0, 1) === 'u') {
         addMessage(data.substr(1), false);
@@ -151,6 +175,9 @@ P2P.startCall = (id) => {
           ownStream.getVideoTracks()[0].enabled = optionCamStatus;
           ownStream.getAudioTracks()[0].enabled = optionMicStatus;
           document.getElementById('video-own').srcObject = ownStream;
+          setTimeout(() => {
+            startVideo(id, 5);
+          }, 500);
         })
         .catch((error) => {
           console.error(error);
@@ -158,16 +185,7 @@ P2P.startCall = (id) => {
     });
     conn.on('data', (data) => {
       if (data === 'svideoStream') {
-        if (vconn) {
-          vconn.close();
-        }
-        vconn = peer.call(id, ownStream);
-        console.log('J:startstream');
-        vconn.on('stream', remoteStream => {
-          // Show stream in some video/canvas element.
-          console.log('J:remotestream');
-          document.getElementById('video-other').srcObject = remoteStream;
-        });
+        startVideo(id, 5);
       } else if (data === 'sclose') {
         P2P.close();
       } else if (data.substr(0, 1) === 'u') {
@@ -246,4 +264,10 @@ P2P.close = () => {
     ownStream.getVideoTracks()[0].stop();
   }
   setTimeout(globalCallEndedCallback, 400);
+};
+
+P2P.camRetry = () => {
+  if (conn) {
+    conn.send('svideoStream');
+  }
 };
