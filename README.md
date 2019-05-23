@@ -11,7 +11,7 @@ This project is a web application for making peer-to-peer video chat.
 - PeerJs
 - SCSS
 - WebRTC
-### Backent:
+### Backend:
 - PHP
 - MySQL
 

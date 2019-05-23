@@ -6,6 +6,8 @@ mkdir dist/assets
 mkdir dist/assets/images
 
 cp -r fonts dist
+cp -r ../Backend dist/api
+rm dist/api/conf.php
 
 cp css/materialize.min.css dist/css/materialize.min.css
 cp css/style.min.css dist/css/style.min.css

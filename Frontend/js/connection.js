@@ -45,6 +45,7 @@ const addMessage = (message, own) => {
 };
 
 P2P.init = (callReceivedCallback, callEndedCallback) => {
+  $('#codeword-input').val('asdf');
   globalCallReceivedCallback = callReceivedCallback;
   globalCallEndedCallback = callEndedCallback;
   peer = new Peer();
@@ -56,7 +57,6 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
     } else {
       lastPeerId = peer.id;
     }
-    $('#codeword-input').val(peer.id);
     console.log('ID: ' + peer.id);
   });
 
@@ -129,57 +129,81 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
   });
   peer.on('error', err => {
     console.log(err);
+    globalCallEndedCallback();
   });
 };
 
 P2P.startCall = (id) => {
-  // Close old connection
-  if (conn) {
-    conn.close();
-  }
-
-  conn = peer.connect(id, {
-    reliable: true,
-  });
-  conn.on('open', () => {
-    console.log('Connected to: ' + conn.peer);
-    globalCallReceivedCallback();
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        ownStream = stream;
-        ownStream.getVideoTracks()[0].enabled = optionCamStatus;
-        ownStream.getAudioTracks()[0].enabled = optionMicStatus;
-        document.getElementById('video-own').srcObject = ownStream;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  });
-  conn.on('data', (data) => {
-    if (data === 'svideoStream') {
-      if (vconn) {
-        vconn.close();
-      }
-      vconn = peer.call(id, ownStream);
-      console.log('J:startstream');
-      vconn.on('stream', remoteStream => {
-        // Show stream in some video/canvas element.
-        console.log('J:remotestream');
-        document.getElementById('video-other').srcObject = remoteStream;
-      });
-    } else if (data === 'sclose') {
-      P2P.close();
-    } else if (data.substr(0, 1) === 'u') {
-      addMessage(data.substr(1), false);
-    } else {
-      console.log(data);
+  const connectFv = id => {
+    // Close old connection
+    if (conn) {
+      conn.close();
     }
-  });
-  conn.on('close', () => {
-    conn = null;
-    P2P.close();
-    console.log('close');
-  });
+    conn = peer.connect(id, {
+      reliable: true,
+    });
+    conn.on('open', () => {
+      console.log('Connected to: ' + conn.peer);
+      globalCallReceivedCallback();
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          ownStream = stream;
+          ownStream.getVideoTracks()[0].enabled = optionCamStatus;
+          ownStream.getAudioTracks()[0].enabled = optionMicStatus;
+          document.getElementById('video-own').srcObject = ownStream;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+    conn.on('data', (data) => {
+      if (data === 'svideoStream') {
+        if (vconn) {
+          vconn.close();
+        }
+        vconn = peer.call(id, ownStream);
+        console.log('J:startstream');
+        vconn.on('stream', remoteStream => {
+          // Show stream in some video/canvas element.
+          console.log('J:remotestream');
+          document.getElementById('video-other').srcObject = remoteStream;
+        });
+      } else if (data === 'sclose') {
+        P2P.close();
+      } else if (data.substr(0, 1) === 'u') {
+        addMessage(data.substr(1), false);
+      } else {
+        console.log(data);
+      }
+    });
+    conn.on('close', () => {
+      conn = null;
+      P2P.close();
+      console.log('close');
+    });
+  };
+
+  if (id && id[0] === '#') {
+    connectFv(id.substr(1));
+  } else {
+    $.post('/api/call', JSON.stringify({
+      'codeword': id,
+      'myid': peer.id,
+    }), 'application/json' )
+      .done(resp => {
+        console.log( 'second success', resp);
+        if (resp.type === 'from') {
+          console.log('Start call...');
+          connectFv(resp.otherid);
+        } else if (resp.type === 'to') {
+          console.log('Keep waiting...');
+        }
+      })
+      .fail(resp => {
+        console.log( 'error', resp);
+        globalCallEndedCallback();
+      });
+  }
 };
 
 P2P.setCamStatus = status => {
