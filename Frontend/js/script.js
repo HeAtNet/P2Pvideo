@@ -214,6 +214,7 @@ $( document ).ready(() => {
     console.error('mediaDevices not supported');
   }).then(() => {
     checkTimeout = setTimeout(() => {
+      $('.overlay').html('<i class="blue-text large material-icons">videocam</i><br>Enable webcam!');
       $('.overlay').fadeIn();
     }, 2000);
     return navigator.mediaDevices.getUserMedia({video: true});
@@ -228,6 +229,7 @@ $( document ).ready(() => {
     console.error('Webcam not enabled');
   }).then(() => {
     checkTimeout = setTimeout(() => {
+      $('.overlay').html('<i class="blue-text large material-icons">mic</i><br>Enable microphone!');
       $('.overlay').fadeIn();
     }, 2000);
     return navigator.mediaDevices.getUserMedia({audio: true});
@@ -241,8 +243,13 @@ $( document ).ready(() => {
     $('.overlay').fadeOut();
     console.error('Microphone not enabled');
   }).then(() => {
+    console.log('asd f');
     if (!hasCamPermission || !hasMicPermission) {
       $('.overlay').fadeIn();
+      $('.overlay').html(
+        '<i class="' + (hasCamPermission ? 'green' : 'red') + '-text large material-icons">videocam' + (hasCamPermission ? '' : '_off') + '</i><br>Webcam: <span class="' + (hasCamPermission ? 'green' : 'red') + '-text">' + (hasCamPermission ? 'ENABLED' : 'DISABLED') + '</span>' + '<br><br>' +
+        '<i class="' + (hasMicPermission ? 'green' : 'red') + '-text large material-icons">mic' + (hasMicPermission ? '' : '_off') + '</i><br>Microphone: <span class="' + (hasMicPermission ? 'green' : 'red') + '-text">' + (hasMicPermission ? 'ENABLED' : 'DISABLED') + '</span>'
+      );
     } else if (path[0] === 'c') {
       makeCall(path[1]);
     }
