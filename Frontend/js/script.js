@@ -13,6 +13,9 @@ let callEnded = null;
 let redrawOptionButtons = null;
 let switchCamStatus = null;
 let switchMicStatus = null;
+let openFullscreen = null;
+let closeFullscreen = null;
+let changeFullScreen = null;
 
 showModal = (content, buttons, callback) => {
   $('#modal-save .modal-content').html(content);
@@ -119,6 +122,37 @@ switchMicStatus = () => {
   redrawOptionButtons();
 };
 
+openFullscreen = () => {
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) {
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    elem.msRequestFullscreen();
+  }
+};
+closeFullscreen = () => {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+};
+changeFullScreen = () => {
+  if ( window.fullScreen || (window.innerWidth === window.screen.width && window.innerHeight === window.screen.height) ) {
+    closeFullscreen();
+  } else {
+    openFullscreen();
+  }
+};
+
 // INIT
 $( document ).ready(() => {
   console.log('Document ready');
@@ -166,6 +200,16 @@ $( document ).ready(() => {
       break;
     }
   });
+  $(document).on('keydown', e => {
+    console.log(e.keyCode);
+    switch (e.keyCode) {
+    case 122: // F11
+      changeFullScreen();
+      e.preventDefault();
+      return false;
+    }
+    return true;
+  });
   $('.js-btn-end').click(endCall);
   $('.js-btn-cam').click(switchCamStatus);
   $('.js-btn-mic').click(switchMicStatus);
@@ -175,6 +219,7 @@ $( document ).ready(() => {
   $('.js-btn-vid').click(() => {
     M.Tabs.getInstance($('#tabs-swipe-call')[0]).select('tab-window-webcam');
   });
+  $('.js-btn-ful').click(changeFullScreen);
   $('#btn-message-send').click(() => {
     P2P.message($('#message-input').val());
     $('#message-input').val('');
@@ -209,6 +254,14 @@ $( document ).ready(() => {
     }, 2000);
     $('.btn-video-container.down').removeClass('slidedown');
     $('#tab-window-webcam').removeClass('inactive');
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+      $('.js-btn-ful .material-icons').text('fullscreen_exit');
+    } else {
+      $('.js-btn-ful .material-icons').text('fullscreen');
+    }
   });
 
   P2P.init(callReceived, callEnded);

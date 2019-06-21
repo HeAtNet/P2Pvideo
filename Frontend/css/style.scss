@@ -199,6 +199,8 @@ body {
   width: 100%;
   text-align: center;
   height: 0px;
+  display: flex;
+  justify-content: center;
 
   .btn-floating {
     margin: 0 10px;
