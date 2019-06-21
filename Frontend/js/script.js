@@ -197,6 +197,19 @@ $( document ).ready(() => {
     }
     return true;
   });
+  let hideCallElementsTimeout;
+  $('#window-call').on('mousemove', () => {
+    if (hideCallElementsTimeout) {
+      clearTimeout(hideCallElementsTimeout);
+    }
+    hideCallElementsTimeout = setTimeout(() => {
+      console.log('OUT');
+      $('.btn-video-container.down').addClass('slidedown');
+      $('#tab-window-webcam').addClass('inactive');
+    }, 2000);
+    $('.btn-video-container.down').removeClass('slidedown');
+    $('#tab-window-webcam').removeClass('inactive');
+  });
 
   P2P.init(callReceived, callEnded);
 

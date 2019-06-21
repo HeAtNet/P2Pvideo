@@ -134,6 +134,13 @@ body {
 
 #tab-window-webcam {
   padding: 0px;
+
+  &.inactive {
+    cursor: none;
+     * {
+       cursor: none;
+     }
+  }
 }
 
 #tab-window-chat {
@@ -224,6 +231,9 @@ body {
   max-width: 100px;
   border: solid black 1px;
   border-radius: 0 0 0 3px;
+
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .overlay {
