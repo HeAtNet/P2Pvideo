@@ -155,7 +155,6 @@ changeFullScreen = () => {
 
 // INIT
 $( document ).ready(() => {
-  console.log('Document ready');
   // INIT MATERIALIZE
   $('.tabs').tabs({
     swipeable: true,
@@ -201,7 +200,6 @@ $( document ).ready(() => {
     }
   });
   $(document).on('keydown', e => {
-    console.log(e.keyCode);
     switch (e.keyCode) {
     case 122: // F11
       changeFullScreen();
@@ -248,7 +246,6 @@ $( document ).ready(() => {
       clearTimeout(hideCallElementsTimeout);
     }
     hideCallElementsTimeout = setTimeout(() => {
-      console.log('OUT');
       $('.btn-video-container.down').addClass('slidedown');
       $('#tab-window-webcam').addClass('inactive');
     }, 2000);
@@ -309,7 +306,6 @@ $( document ).ready(() => {
     $('.overlay').fadeOut();
     console.error('Microphone not enabled');
   }).then(() => {
-    console.log('asd f');
     if (!hasCamPermission || !hasMicPermission) {
       $('.overlay').fadeIn();
       $('.overlay').html(

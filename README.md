@@ -45,7 +45,9 @@ Now, you needs to wait for the other user to also starts the call, or you can st
 You can see your partner and yourself. You can finish the call or turn on/off webcam and microfone.  
 ![Call page](images/wireframe5.png)  
 You can switch to the `chat view`, where you can send text messages:  
-![Call page](images/wireframe6.png)
+![Call page](images/wireframe6.png)  
+You can also use **\*BOLD\***, _\_ITALIC\__, &#96;CODE&#96; and &#96;&#96;&#96;MULTIPLE LINE CODE&#96;&#96;&#96; formatting tools.  
+The chat section also recognises links and YouTube URLs.
 
 ### Cannot make a call
 - Check your internet connection

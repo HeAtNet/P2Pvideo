@@ -192,6 +192,16 @@ body {
   }
 }
 
+#tab-window-help {
+  overflow-y: auto;
+  display: block;
+  text-align: center;
+  .card-panel {
+    text-align: left;
+    margin: 7.5px auto;
+  }
+}
+
 .btn-video-container {
   position: absolute;
   top: 20px;
@@ -249,4 +259,8 @@ body {
   background: rgba(0,0,0,0.8);
   color: white;
   padding-top: 50px;
+}
+
+.collection-item .secondary-content .material-icons{
+  cursor: pointer;
 }

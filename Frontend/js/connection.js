@@ -50,10 +50,8 @@ const startVideo = (id, iteration) => {
   }
   vconn = peer.call(id, ownStream);
   if (vconn) {
-    console.log('J:startstream');
     vconn.on('stream', remoteStream => {
       // Show stream in some video/canvas element.
-      console.log('J:remotestream');
       document.getElementById('video-other').srcObject = remoteStream;
     });
     vconn.on('error', () => {
@@ -68,14 +66,12 @@ const startVideo = (id, iteration) => {
 };
 
 P2P.init = (callReceivedCallback, callEndedCallback) => {
-  $('#codeword-input').val('asdf');
   globalCallReceivedCallback = callReceivedCallback;
   globalCallEndedCallback = callEndedCallback;
   peer = new Peer();
   console.log('Init p2p');
   peer.on('open', () => {
     if (peer.id === null) {
-      console.log('Received null id from peer open');
       peer.id = lastPeerId;
     } else {
       lastPeerId = peer.id;
@@ -87,10 +83,8 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
   peer.on('call', call => {
     vconn = call;
     call.answer(ownStream); // Answer the call with an A/V stream.
-    console.log('t:startstream');
     call.on('stream', remoteStream => {
       // Show stream in some video/canvas element.
-      console.log('t:remotestream');
       document.getElementById('video-other').srcObject = remoteStream;
     });
   });
@@ -139,8 +133,6 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
     });
   });
   peer.on('disconnected', () => {
-    console.log('Connection lost. Please reconnect');
-
     // Workaround for peer.reconnect deleting previous id
     peer.id = lastPeerId;
     peer._lastServerId = lastPeerId;
@@ -149,7 +141,6 @@ P2P.init = (callReceivedCallback, callEndedCallback) => {
   peer.on('close', () => {
     conn = null;
     P2P.close();
-    console.log('Connection destroyed');
   });
   peer.on('error', err => {
     console.log(err);
@@ -197,7 +188,6 @@ P2P.startCall = (id) => {
     conn.on('close', () => {
       conn = null;
       P2P.close();
-      console.log('close');
     });
   };
 
@@ -209,7 +199,6 @@ P2P.startCall = (id) => {
       'myid': peer.id,
     }), 'application/json' )
       .done(resp => {
-        console.log( 'second success', resp);
         if (resp.type === 'from') {
           console.log('Start call...');
           connectFv(resp.otherid);
