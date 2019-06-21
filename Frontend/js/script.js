@@ -1,4 +1,5 @@
 let showModal = null;
+let deferredPrompt = null;
 
 let redrawContacts = null;
 let checkInContacts = null;
@@ -167,6 +168,13 @@ $( document ).ready(() => {
   redrawContacts();
   redrawOptionButtons();
 
+  if (localStorage.getItem('installprompt') !== 'false') {
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+  }
+
   // ADD FUNFTIONS
   const callFunction = () => {
     const codeword = $('#codeword-input').val();
@@ -314,6 +322,27 @@ $( document ).ready(() => {
       );
     } else if (path[0] === 'c') {
       makeCall(path[1]);
+    } else if (deferredPrompt) {
+      showModal('Would you like to add this app to the homescreen?', [
+        'Add',
+        'Not now',
+        'Never',
+      ], e => {
+        if (e === 0) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(choiceResult => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the A2HS prompt');
+            } else {
+              console.log('User dismissed the A2HS prompt');
+            }
+            deferredPrompt = null;
+          });
+        }
+        if (e === 2) {
+          localStorage.setItem('installprompt', 'false');
+        }
+      });
     }
   });
 });
@@ -332,23 +361,3 @@ if ('serviceWorker' in navigator) {
 } else {
   console.error('Service workers not supported');
 }
-
-/*
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-});
-
-document.querySelector('button').addEventListener('click', () => {
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(choiceResult => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the A2HS prompt');
-    } else {
-      console.log('User dismissed the A2HS prompt');
-    }
-    deferredPrompt = null;
-  });
-});
-*/

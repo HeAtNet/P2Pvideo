@@ -20,6 +20,7 @@ cp service-worker.js dist/service-worker.js
 cp manifest.webmanifest dist/manifest.webmanifest
 cp index.html dist/index.html
 cp .htaccess dist/.htaccess
+cp robots.txt dist/robots.txt
 
 cp assets/images/logo-144.png dist/assets/images/logo-144.png
 cp assets/images/logo-192.png dist/assets/images/logo-192.png

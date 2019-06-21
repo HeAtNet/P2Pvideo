@@ -1,9 +1,12 @@
 {
   "name": "P2Pvideo",
+  "short_name": "P2Pvideo",
   "version": "1.0",
   "manifest_version": "1.0",
   "start_url": "/",
   "display": "standalone",
+  "background_color": "#eeeeee",
+  "theme_color": "#eeeeee",
   "icons": [
     {
       "src": "/assets/images/logo-144.png",
